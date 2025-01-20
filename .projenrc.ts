@@ -1,18 +1,47 @@
-import { awscdk } from "projen";
+import { awscdk, ReleasableCommits } from "projen";
+import { GithubCredentials } from "projen/lib/github";
+import { ProseWrap } from "projen/lib/javascript";
+
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Ben Limmer",
-  authorAddress: "ben@benlimmer.com",
-  cdkVersion: "2.1.0",
+  authorAddress: "hello@benlimmer.com",
+  cdkVersion: "2.73.0", // Released in April 2023
   defaultReleaseBranch: "main",
-  jsiiVersion: "~5.7.0",
-  name: "cdk-github-oidc",
-  prettier: true,
-  projenrcTs: true,
-  repositoryUrl: "https://github.com/ben/cdk-github-oidc.git",
+  name: "@blimmer/cdk-github-oidc",
+  repositoryUrl: "https://github.com/blimmer/cdk-github-oidc.git",
+  description: "AWS CDK construct to create OIDC roles for CircleCI jobs",
+  keywords: ["cdk", "aws-cdk", "awscdk", "aws", "iam", "github", "github-actions", "oidc", "openid-connect"],
+  prerelease: "alpha",
 
-  // deps: [],                /* Runtime dependencies of this module. */
-  // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],             /* Build dependencies for this module. */
-  // packageName: undefined,  /* The "name" in package.json. */
+  githubOptions: {
+    projenCredentials: GithubCredentials.fromApp(),
+  },
+
+  projenrcTs: true,
+
+  jsiiVersion: "~5.7.0",
+
+  releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
+  python: {
+    distName: "cdk-github-oidc",
+    module: "cdk_github_oidc",
+  },
+
+  // deps: [],
+  devDeps: ["@mrgrain/jsii-struct-builder"],
+  depsUpgrade: false,
+  eslintOptions: {
+    dirs: ["src"],
+    ignorePatterns: ["src/generated/*.ts"], // ignore generated files
+  },
+
+  prettier: true,
+  prettierOptions: {
+    settings: {
+      printWidth: 120,
+      proseWrap: ProseWrap.ALWAYS,
+    },
+  },
 });
+
 project.synth();

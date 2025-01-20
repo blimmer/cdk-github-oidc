@@ -1,6 +1,10 @@
 {
   "dependencies": [
     {
+      "name": "@mrgrain/jsii-struct-builder",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "type": "build"
     },
@@ -98,7 +102,7 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.1.0",
+      "version": "^2.73.0",
       "type": "peer"
     },
     {

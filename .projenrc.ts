@@ -1,5 +1,7 @@
 import { awscdk, ReleasableCommits } from "projen";
+import { GithubCredentials } from "projen/lib/github";
 import { ProseWrap } from "projen/lib/javascript";
+
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Ben Limmer",
   authorAddress: "hello@benlimmer.com",
@@ -10,6 +12,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
   description: "AWS CDK construct to create OIDC roles for CircleCI jobs",
   keywords: ["cdk", "aws-cdk", "awscdk", "aws", "iam", "github", "github-actions", "oidc", "openid-connect"],
   prerelease: "alpha",
+
+  githubOptions: {
+    projenCredentials: GithubCredentials.fromApp(),
+  },
 
   projenrcTs: true,
 

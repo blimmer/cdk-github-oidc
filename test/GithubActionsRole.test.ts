@@ -75,4 +75,67 @@ describe("GithubActionsRole", () => {
       "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc/README.md",
     );
   });
+
+  it("uses StringLike in the subject filter condition when wildcards are present", () => {
+    const app = new App();
+    const stack = new Stack(app, "Stack");
+    const provider = GithubActionsIdentityProvider.fromAccount(stack, { account: "123456789012", partition: "aws" });
+    new GithubActionsRole(stack, "Role", {
+      provider,
+      subjectFilters: [new BranchFilter({ owner: "my-org", repository: "my-repo", branch: "*" })],
+    });
+
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties("AWS::IAM::Role", {
+      AssumeRolePolicyDocument: {
+        Statement: [
+          {
+            Action: "sts:AssumeRoleWithWebIdentity",
+            Condition: {
+              StringLike: {
+                "token.actions.githubusercontent.com:sub": ["repo:my-org/my-repo:ref:refs/heads/*"],
+              },
+              StringEquals: {
+                "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+              },
+            },
+            Effect: "Allow",
+            Principal: {
+              Federated: "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com",
+            },
+          },
+        ],
+      },
+    });
+  });
+
+  it("uses StringEquals in the subject filter condition when wildcards are not present", () => {
+    const app = new App();
+    const stack = new Stack(app, "Stack");
+    const provider = GithubActionsIdentityProvider.fromAccount(stack, { account: "123456789012", partition: "aws" });
+    new GithubActionsRole(stack, "Role", {
+      provider,
+      subjectFilters: [new BranchFilter({ owner: "my-org", repository: "my-repo", branch: "main" })],
+    });
+
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties("AWS::IAM::Role", {
+      AssumeRolePolicyDocument: {
+        Statement: [
+          {
+            Action: "sts:AssumeRoleWithWebIdentity",
+            Condition: {
+              StringEquals: {
+                "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+              },
+            },
+            Effect: "Allow",
+            Principal: {
+              Federated: "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com",
+            },
+          },
+        ],
+      },
+    });
+  });
 });

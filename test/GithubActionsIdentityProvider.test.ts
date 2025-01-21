@@ -13,7 +13,7 @@ describe("GithubActionsIdentityProvider", () => {
     });
   });
 
-  it("uses the organization ID as the client ID", () => {
+  it("uses the proper hardcoded client ID", () => {
     const app = new App();
     const stack = new Stack(app, "TestStack");
     new GithubActionsIdentityProvider(stack, "GithubActionsIdentityProvider");
@@ -65,5 +65,27 @@ describe("GithubActionsIdentityProvider", () => {
     expect(provider.arn).toEqual(
       `arn:${Stack.of(stack).partition}:iam::${Stack.of(stack).account}:oidc-provider/token.actions.githubusercontent.com`,
     );
+  });
+
+  it("can import an existing provider specifying the account", () => {
+    const app = new App();
+    const stack = new Stack(app, "TestStack", {
+      env: { account: "123456789012", region: "us-west-2" },
+    });
+    const provider = GithubActionsIdentityProvider.fromAccount(stack, { account: "123456789012" });
+
+    expect(provider.arn).toEqual(
+      `arn:${Stack.of(stack).partition}:iam::123456789012:oidc-provider/token.actions.githubusercontent.com`,
+    );
+  });
+
+  it("can import an existing provider specifying the partition", () => {
+    const app = new App();
+    const stack = new Stack(app, "TestStack", {
+      env: { account: "123456789012", region: "us-west-2" },
+    });
+    const provider = GithubActionsIdentityProvider.fromAccount(stack, { partition: "aws-cn" });
+
+    expect(provider.arn).toEqual(`arn:aws-cn:iam::123456789012:oidc-provider/token.actions.githubusercontent.com`);
   });
 });

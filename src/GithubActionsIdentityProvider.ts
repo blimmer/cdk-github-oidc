@@ -12,6 +12,22 @@ interface GithubActionsIdentityProviderProps {
   thumbprints?: string[];
 }
 
+interface GithubActionsIdentityProviderImportProps {
+  /**
+   * An explicit account ID where the provider is defined.
+   *
+   * @default - the current stack's account
+   */
+  account?: string;
+
+  /**
+   * An explicit partition where the provider is defined.
+   *
+   * @default - the current stack's partition
+   */
+  partition?: string;
+}
+
 /**
  * This construct creates an ODIC provider to allow AWS access from Github Actions workflows. You'll need to instantiate
  * this construct once per AWS account.
@@ -29,8 +45,11 @@ export class GithubActionsIdentityProvider extends CfnOIDCProvider implements IG
    * so internally the reference is made by constructing the ARN from AWS
    * Account ID & Github issuer URL.
    */
-  public static fromAccount(scope: Construct): IGithubActionsIdentityProvider {
-    const { account, partition } = Stack.of(scope);
+  public static fromAccount(
+    scope: Construct,
+    props: GithubActionsIdentityProviderImportProps = {},
+  ): IGithubActionsIdentityProvider {
+    const { account = Stack.of(scope).account, partition = Stack.of(scope).partition } = props;
     const providerArn = `arn:${partition}:iam::${account}:oidc-provider/${GithubActionsIdentityProvider.issuer}`;
     return { arn: providerArn };
   }

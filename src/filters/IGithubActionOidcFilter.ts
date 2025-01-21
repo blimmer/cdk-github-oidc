@@ -7,7 +7,6 @@ export interface GithubActionOidcFilterProps {
 }
 
 export abstract class IGithubActionOidcFilter {
-  public abstract toSubject(): string;
   protected readonly owner: string;
   protected readonly repository: string;
 
@@ -15,4 +14,6 @@ export abstract class IGithubActionOidcFilter {
     this.owner = props.owner;
     this.repository = props.repository;
   }
+
+  public abstract toSubject(): string;
 }

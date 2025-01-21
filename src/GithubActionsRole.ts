@@ -1,9 +1,9 @@
 import { OpenIdConnectPrincipal, OpenIdConnectProvider, Role } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
-import { RoleProps } from "./generated/IamRoleProps";
-import { type IGithubActionsIdentityProvider } from "./IGithubActionsIdentityProvider";
-import { GithubActionsIdentityProvider } from "./GithubActionsIdentityProvider";
 import type { IGithubActionOidcFilter } from "./filters/IGithubActionOidcFilter";
+import { RoleProps } from "./generated/IamRoleProps";
+import { GithubActionsIdentityProvider } from "./GithubActionsIdentityProvider";
+import { type IGithubActionsIdentityProvider } from "./IGithubActionsIdentityProvider";
 
 export interface GithubActionsRoleConfiguration {
   /**

@@ -1,8 +1,8 @@
 import { App, Stack } from "aws-cdk-lib";
+import { Template } from "aws-cdk-lib/assertions";
+import { BranchFilter } from "../src/filters/BranchFilter";
 import { GithubActionsIdentityProvider } from "../src/GithubActionsIdentityProvider";
 import { GithubActionsRole } from "../src/GithubActionsRole";
-import { BranchFilter } from "../src/filters/BranchFilter";
-import { Template } from "aws-cdk-lib/assertions";
 
 describe("GithubActionsRole", () => {
   it("works with the first-class GithubActionsIdentityProvider class", () => {

@@ -1,3 +1,4 @@
+import { ProjenStruct, Struct } from "@mrgrain/jsii-struct-builder";
 import { awscdk, ReleasableCommits } from "projen";
 import { GithubCredentials } from "projen/lib/github";
 import { ProseWrap } from "projen/lib/javascript";
@@ -43,5 +44,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
     },
   },
 });
+
+new ProjenStruct(project, { name: "RoleProps", filePath: "src/generated/IamRoleProps.ts" }).mixin(
+  Struct.fromFqn("aws-cdk-lib.aws_iam.RoleProps").omit("assumedBy").withoutDeprecated(),
+);
 
 project.synth();

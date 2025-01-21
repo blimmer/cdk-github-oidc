@@ -48,7 +48,7 @@ export class GithubActionsRole extends Role {
         // make TypeScript happy with the types.
         OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, `GithubActionsOidcProviderImport${id}`, provider.arn),
         {
-          StringLike: {
+          [determineCondition(subjectFilters)]: {
             [`${GithubActionsIdentityProvider.issuer}:sub`]: subjectFilters.map((filter) => filter.toSubject()),
           },
           StringEquals: {
@@ -61,4 +61,13 @@ export class GithubActionsRole extends Role {
       ...roleProps,
     });
   }
+}
+
+function determineCondition(subjectFilters: IGithubActionOidcFilter[]): string {
+  const anyFilterHasWildcard = subjectFilters.some((filter) => filter.toSubject().includes("*"));
+  if (anyFilterHasWildcard) {
+    return "StringLike";
+  }
+
+  return "StringEquals";
 }

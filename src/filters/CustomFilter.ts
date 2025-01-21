@@ -2,7 +2,7 @@ import { IGithubActionOidcFilter, type GithubActionOidcFilterProps } from "./IGi
 
 export interface CustomFilterProps extends GithubActionOidcFilterProps {
   /**
-   * The filter to apply
+   * The filter to apply. The construct will automatically prefix the filter with `repo:${owner}/${repository}:`.
    *
    * See https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#configuring-the-subject-in-your-cloud-provider
    */

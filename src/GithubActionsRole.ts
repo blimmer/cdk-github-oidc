@@ -37,7 +37,9 @@ export class GithubActionsRole extends Role {
     const { provider, subjectFilters, ...roleProps } = props;
 
     if (subjectFilters.length === 0) {
-      throw new Error("You must provide at least one subject filter");
+      throw new Error(
+        "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc/README.md",
+      );
     }
 
     super(scope, id, {

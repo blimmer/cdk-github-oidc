@@ -1460,7 +1460,7 @@ const customFilterProps: CustomFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
-| <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.filter">filter</a></code> | <code>string</code> | The filter to apply. |
+| <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.filter">filter</a></code> | <code>string</code> | The filter to apply. The construct will automatically prefix the filter with `repo:${owner}/${repository}:`. |
 
 ---
 
@@ -1496,7 +1496,7 @@ public readonly filter: string;
 
 - *Type:* string
 
-The filter to apply.
+The filter to apply. The construct will automatically prefix the filter with `repo:${owner}/${repository}:`.
 
 See https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#configuring-the-subject-in-your-cloud-provider
 

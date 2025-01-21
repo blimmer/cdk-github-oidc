@@ -87,9 +87,47 @@ These filters are used to determine which GitHub Actions workflows can assume th
 This construct exposes first class support for the following filters:
 
 - [`BranchFilter`](/API.md#branchfilter)
+
+  ```ts
+  // Allow all branches
+  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" });
+
+  // Specify a branch
+  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "main" });
+
+  // Specify a branch pattern
+  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "feature/*" });
+  ```
+
 - [`TagFilter`](/API.md#tagfilter)
+
+  ```ts
+  // Allow all tags
+  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "*" });
+
+  // Specify a tag
+  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "v1.0.0" });
+
+  // Specify a tag pattern
+  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "v1.*" });
+  ```
+
 - [`EnvironmentFilter`](/API.md#environmentfilter)
+
+  ```ts
+  // Allow all environments
+  new EnvironmentFilter({ owner: "blimmer", repository: "cdk-github-oidc", environment: "*" });
+
+  // Specify an environment
+  new EnvironmentFilter({ owner: "blimmer", repository: "cdk-github-oidc", environment: "staging" });
+  ```
+
 - [`PullRequestFilter`](/API.md#pullrequestfilter)
+
+  ```ts
+  // Allow all pull requests
+  new PullRequestFilter({ owner: "blimmer", repository: "cdk-github-oidc" });
+  ```
 
 If none of these filters fit your use case, you can implement your via the
 [`IGithubActionOidcFilter`](/API.md#igithubactionoidcfilter) interface, or use the

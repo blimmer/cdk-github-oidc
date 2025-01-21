@@ -32,6 +32,11 @@ export interface GithubActionsRoleConfiguration {
 
 export interface GithubActionsRoleProps extends GithubActionsRoleConfiguration, RoleProps {}
 
+/**
+ * A role that can be assumed by Github Actions via OIDC.
+ *
+ * Learn more at https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+ */
 export class GithubActionsRole extends Role {
   constructor(scope: Construct, id: string, props: GithubActionsRoleProps) {
     const { provider, subjectFilters, ...roleProps } = props;

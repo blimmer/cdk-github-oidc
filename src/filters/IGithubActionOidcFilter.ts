@@ -6,6 +6,11 @@ export interface GithubActionOidcFilterProps {
   readonly repository: string;
 }
 
+/**
+ * An abstract class that represents a filter for a Github Actions OIDC filter.
+ *
+ * You can implement this class to create your own filters.
+ */
 export abstract class IGithubActionOidcFilter {
   protected readonly owner: string;
   protected readonly repository: string;

@@ -1,12 +1,12 @@
 import { IGithubActionOidcFilter, type GithubActionOidcFilterProps } from "./IGithubActionOidcFilter";
 
-interface BranchFilterProps extends GithubActionOidcFilterProps {
+export interface BranchFilterProps extends GithubActionOidcFilterProps {
   /**
    * The name of the branch to filter on. You can also use wildcards.
    *
    * To allow all branches, pass `*`.
    */
-  branch: string;
+  readonly branch: string;
 }
 
 /**

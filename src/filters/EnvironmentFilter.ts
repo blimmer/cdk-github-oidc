@@ -2,7 +2,7 @@ import { IGithubActionOidcFilter, type GithubActionOidcFilterProps } from "./IGi
 
 export interface EnvironmentFilterProps extends GithubActionOidcFilterProps {
   /** The name of the Github environment to allow assuming this role */
-  environment: string;
+  readonly environment: string;
 }
 
 /**

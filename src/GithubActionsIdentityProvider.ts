@@ -3,29 +3,29 @@ import { CfnOIDCProvider } from "aws-cdk-lib/aws-iam";
 import type { Construct } from "constructs";
 import type { IGithubActionsIdentityProvider } from "./IGithubActionsIdentityProvider";
 
-interface GithubActionsIdentityProviderProps {
+export interface GithubActionsIdentityProviderProps {
   /**
    * Pass a list of thumbprints for the GitHub Actions OIDC provider.
    *
    * @default - [d89e3bd43d5d909b47a18977aa9d5ce36cee184c]
    */
-  thumbprints?: string[];
+  readonly thumbprints?: string[];
 }
 
-interface GithubActionsIdentityProviderImportProps {
+export interface GithubActionsIdentityProviderImportProps {
   /**
    * An explicit account ID where the provider is defined.
    *
    * @default - the current stack's account
    */
-  account?: string;
+  readonly account?: string;
 
   /**
    * An explicit partition where the provider is defined.
    *
    * @default - the current stack's partition
    */
-  partition?: string;
+  readonly partition?: string;
 }
 
 /**

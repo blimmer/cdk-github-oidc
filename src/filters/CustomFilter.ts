@@ -1,12 +1,12 @@
 import { IGithubActionOidcFilter, type GithubActionOidcFilterProps } from "./IGithubActionOidcFilter";
 
-interface CustomFilterProps extends GithubActionOidcFilterProps {
+export interface CustomFilterProps extends GithubActionOidcFilterProps {
   /**
    * The filter to apply
    *
    * See https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#configuring-the-subject-in-your-cloud-provider
    */
-  filter: string;
+  readonly filter: string;
 }
 
 /**

@@ -1,9 +1,9 @@
 export interface GithubActionOidcFilterProps {
   /** The org or user that owns the repository */
-  owner: string;
+  readonly owner: string;
 
   /** The name of the repository */
-  repository: string;
+  readonly repository: string;
 }
 
 export abstract class IGithubActionOidcFilter {

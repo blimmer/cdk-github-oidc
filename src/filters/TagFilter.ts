@@ -1,12 +1,12 @@
 import { IGithubActionOidcFilter, type GithubActionOidcFilterProps } from "./IGithubActionOidcFilter";
 
-interface TagFilterProps extends GithubActionOidcFilterProps {
+export interface TagFilterProps extends GithubActionOidcFilterProps {
   /**
    * The name of the tag to filter on. You can also use wildcards.
    *
    * To allow all tags, pass `*`.
    */
-  tag: string;
+  readonly tag: string;
 }
 
 /**

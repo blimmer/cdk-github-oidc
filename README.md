@@ -73,7 +73,7 @@ export class MyStack extends Stack {
       provider,
       roleName: "my-github-actions-role",
       description: "Role assumed by GitHub Actions",
-      subjectFilters: [new BranchFilter("main")],
+      subjectFilters: [new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" })],
     });
   }
 }
@@ -119,7 +119,7 @@ export class MyStack extends Stack {
       provider,
       roleName: "my-github-actions-role",
       description: "Role assumed by GitHub Actions",
-      subjectFilters: [new BranchFilter("main")],
+      subjectFilters: [new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" })],
     });
 
     // Grant access via CDK `grant*` methods

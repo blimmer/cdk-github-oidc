@@ -215,8 +215,7 @@
       "name": "release",
       "description": "Prepare a release from \"main\" branch",
       "env": {
-        "RELEASE": "true",
-        "PRERELEASE": "alpha"
+        "RELEASE": "true"
       },
       "steps": [
         {

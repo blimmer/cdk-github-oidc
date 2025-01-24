@@ -1,7 +1,7 @@
 import { ProjenStruct, Struct } from "@mrgrain/jsii-struct-builder";
 import { awscdk, ReleasableCommits } from "projen";
 import { GithubCredentials } from "projen/lib/github";
-import { ProseWrap } from "projen/lib/javascript";
+import { NpmAccess, ProseWrap } from "projen/lib/javascript";
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Ben Limmer",
@@ -22,6 +22,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   jsiiVersion: "~5.7.0",
 
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
+  npmAccess: NpmAccess.PUBLIC,
   python: {
     distName: "cdk-github-oidc",
     module: "cdk_github_oidc",

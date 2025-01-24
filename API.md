@@ -2196,6 +2196,47 @@ To allow all tags, pass `*`.
 
 ## Classes <a name="Classes" id="Classes"></a>
 
+### AllowAllFilter <a name="AllowAllFilter" id="@blimmer/cdk-github-oidc.AllowAllFilter"></a>
+
+Allow assuming a role for all Github workflows (branches, tags, pull requests, environments, etc.).
+
+#### Initializers <a name="Initializers" id="@blimmer/cdk-github-oidc.AllowAllFilter.Initializer"></a>
+
+```typescript
+import { AllowAllFilter } from '@blimmer/cdk-github-oidc'
+
+new AllowAllFilter(props: GithubActionOidcFilterProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#@blimmer/cdk-github-oidc.AllowAllFilter.Initializer.parameter.props">props</a></code> | <code><a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps">GithubActionOidcFilterProps</a></code> | *No description.* |
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="@blimmer/cdk-github-oidc.AllowAllFilter.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps">GithubActionOidcFilterProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#@blimmer/cdk-github-oidc.AllowAllFilter.toSubject">toSubject</a></code> | *No description.* |
+
+---
+
+##### `toSubject` <a name="toSubject" id="@blimmer/cdk-github-oidc.AllowAllFilter.toSubject"></a>
+
+```typescript
+public toSubject(): string
+```
+
+
+
+
 ### BranchFilter <a name="BranchFilter" id="@blimmer/cdk-github-oidc.BranchFilter"></a>
 
 Allow assuming a role for a specific Github branch.

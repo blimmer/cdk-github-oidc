@@ -766,6 +766,10 @@ public readonly issuer: string;
 
 ### GithubActionsRole <a name="GithubActionsRole" id="@blimmer/cdk-github-oidc.GithubActionsRole"></a>
 
+A role that can be assumed by Github Actions via OIDC.
+
+Learn more at https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect
+
 #### Initializers <a name="Initializers" id="@blimmer/cdk-github-oidc.GithubActionsRole.Initializer"></a>
 
 ```typescript
@@ -2322,6 +2326,10 @@ public toSubject(): string
 
 
 ### IGithubActionOidcFilter <a name="IGithubActionOidcFilter" id="@blimmer/cdk-github-oidc.IGithubActionOidcFilter"></a>
+
+An abstract class that represents a filter for a Github Actions OIDC filter.
+
+You can implement this class to create your own filters.
 
 #### Initializers <a name="Initializers" id="@blimmer/cdk-github-oidc.IGithubActionOidcFilter.Initializer"></a>
 

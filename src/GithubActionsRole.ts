@@ -54,18 +54,30 @@ export class GithubActionsRole extends Role {
         // However, the OpenIdConnectPrincipal still expects the L2 OpenIdConnectProvider, so we "import" it here to
         // make TypeScript happy with the types.
         OpenIdConnectProvider.fromOpenIdConnectProviderArn(scope, `GithubActionsOidcProviderImport${id}`, provider.arn),
-        {
-          StringLike: {
-            [`${GithubActionsIdentityProvider.issuer}:sub`]: subjectFilters.map((filter) => filter.toSubject()),
-          },
-          StringEquals: {
-            // Audience is always sts.amazonaws.com with AWS official Github Action
-            // https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#adding-the-identity-provider-to-aws
-            [`${GithubActionsIdentityProvider.issuer}:aud`]: "sts.amazonaws.com",
-          },
-        },
+        buildConditions(subjectFilters),
       ),
       ...roleProps,
     });
   }
+}
+
+function buildConditions(subjectFilters: IGithubActionOidcFilter[]) {
+  const subjects = subjectFilters.map((filter) => filter.toSubject());
+  const hasWildcard = subjects.some((subject) => subject.includes("*"));
+
+  const conditions: Record<string, Record<string, string | string[]>> = {
+    StringEquals: {
+      [`${GithubActionsIdentityProvider.issuer}:aud`]: "sts.amazonaws.com",
+    },
+  };
+
+  if (hasWildcard) {
+    conditions.StringLike = {
+      [`${GithubActionsIdentityProvider.issuer}:sub`]: subjects,
+    };
+  } else {
+    conditions.StringEquals[`${GithubActionsIdentityProvider.issuer}:sub`] = subjects;
+  }
+
+  return conditions;
 }

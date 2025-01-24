@@ -204,6 +204,42 @@ This package is available for Python as `cdk-github-oidc`.
 pip install cdk-github-oidc
 ```
 
+## Migrating from `aws-cdk-github-oidc`
+
+This package was inspired by [`aws-cdk-github-oidc`](https://github.com/aripalo/aws-cdk-github-oidc), but this package
+became somewhat unmaintained.
+
+For a role that looked like this in `aws-cdk-github-oidc`:
+
+```ts
+import { GithubActionsIdentityProvider, GithubActionsRole } from "aws-cdk-github-oidc";
+
+const provider = new GithubActionsIdentityProvider(scope, "GithubProvider");
+const deployRole = new GithubActionsRole(scope, "DeployRole", {
+  provider,
+  owner: "octo-org",
+  repo: "octo-repo",
+  roleName: "MyDeployRole",
+  description: "This role deploys stuff to AWS",
+  maxSessionDuration: cdk.Duration.hours(2),
+});
+```
+
+The equivalent role in this package looks like this:
+
+```ts
+import { GithubActionsIdentityProvider, GithubActionsRole, BranchFilter } from "@blimmer/cdk-github-oidc";
+
+const provider = new GithubActionsIdentityProvider(scope, "GithubProvider");
+const deployRole = new GithubActionsRole(scope, "DeployRole", {
+  provider,
+  roleName: "MyDeployRole",
+  description: "This role deploys stuff to AWS",
+  subjectFilters: [new BranchFilter({ owner: "octo-org", repository: "octo-repo", branch: "*" })],
+  maxSessionDuration: cdk.Duration.hours(2),
+});
+```
+
 ## Resources
 
 - [Security hardening your deployments](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments)

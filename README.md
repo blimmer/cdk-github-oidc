@@ -235,10 +235,19 @@ const deployRole = new GithubActionsRole(scope, "DeployRole", {
   provider,
   roleName: "MyDeployRole",
   description: "This role deploys stuff to AWS",
-  subjectFilters: [new BranchFilter({ owner: "octo-org", repository: "octo-repo", branch: "*" })],
+  subjectFilters: [new CustomFilter({ owner: "octo-org", repository: "octo-repo", filter: "*" })],
   maxSessionDuration: cdk.Duration.hours(2),
 });
 ```
+
+### Resource Replacement
+
+By default, CloudFormation will create resources before destroying the old ones. This is a problem when transitioning
+between `aws-cdk-github-oidc` and `@blimmer/cdk-github-oidc` because the `GithubActionsIdentityProvider` is a singleton.
+It might also affect your roles, if you specified a `roleName`.
+
+To work around this issue, delete the old provider and role(s) before migrating to use this package. This will cause
+downtime while you delete/re-create the resources.
 
 ## Resources
 

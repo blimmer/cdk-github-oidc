@@ -51,3 +51,4 @@ junit.xml
 tsconfig.json
 !/API.md
 !/.projenrc.ts
+!/src/generated/IamRoleProps.ts

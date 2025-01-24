@@ -228,14 +228,17 @@ const deployRole = new GithubActionsRole(scope, "DeployRole", {
 The equivalent role in this package looks like this:
 
 ```ts
-import { GithubActionsIdentityProvider, GithubActionsRole, BranchFilter } from "@blimmer/cdk-github-oidc";
+import { GithubActionsIdentityProvider, GithubActionsRole, AllowAllFilter } from "@blimmer/cdk-github-oidc";
 
 const provider = new GithubActionsIdentityProvider(scope, "GithubProvider");
 const deployRole = new GithubActionsRole(scope, "DeployRole", {
   provider,
   roleName: "MyDeployRole",
   description: "This role deploys stuff to AWS",
-  subjectFilters: [new CustomFilter({ owner: "octo-org", repository: "octo-repo", filter: "*" })],
+  subjectFilters: [
+    // I encourage you to scope this down to a different filter (e.g., BranchFilter, TagFilter, PullRequestFilter, etc.)
+    new AllowAllFilter({ owner: "octo-org", repository: "octo-repo" }),
+  ],
   maxSessionDuration: cdk.Duration.hours(2),
 });
 ```

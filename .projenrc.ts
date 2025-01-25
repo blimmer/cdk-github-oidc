@@ -30,7 +30,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   // deps: [],
   devDeps: ["@mrgrain/jsii-struct-builder"],
-  depsUpgrade: false,
   eslintOptions: {
     dirs: ["src"],
     ignorePatterns: ["src/generated/*.ts"], // ignore generated files

@@ -86,6 +86,13 @@ These filters are used to determine which GitHub Actions workflows can assume th
 
 This construct exposes first class support for the following filters:
 
+- [`AllowAllFilter`](/API.md#allowallfilter)
+
+  ```ts
+  // Allow all branches, tags, environments, pull requests, etc.
+  new AllowAllFilter({ owner: "blimmer", repository: "cdk-github-oidc" });
+  ```
+
 - [`BranchFilter`](/API.md#branchfilter)
 
   ```ts

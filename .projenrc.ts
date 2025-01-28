@@ -17,6 +17,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
   githubOptions: {
     projenCredentials: GithubCredentials.fromApp(),
   },
+  autoApproveUpgrades: true,
+  autoApproveOptions: {
+    allowedUsernames: ["projen-automation-app"],
+  },
 
   projenrcTs: true,
 

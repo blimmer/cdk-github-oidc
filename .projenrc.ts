@@ -20,6 +20,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   autoApproveUpgrades: true,
   autoApproveOptions: {
     allowedUsernames: ["projen-automation-app[bot]"],
+    secret: "AUTO_APPROVE_GITHUB_TOKEN", // if https://github.com/projen/projen/issues/1736 is fixed, we could use the app instead
   },
 
   projenrcTs: true,

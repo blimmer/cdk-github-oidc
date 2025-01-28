@@ -19,7 +19,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   },
   autoApproveUpgrades: true,
   autoApproveOptions: {
-    allowedUsernames: ["projen-automation-app"],
+    allowedUsernames: ["projen-automation-app[bot]"],
   },
 
   projenrcTs: true,

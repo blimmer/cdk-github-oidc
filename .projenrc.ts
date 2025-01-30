@@ -1,7 +1,7 @@
 import { ProjenStruct, Struct } from "@mrgrain/jsii-struct-builder";
 import { awscdk, ReleasableCommits } from "projen";
 import { GithubCredentials } from "projen/lib/github";
-import { NpmAccess, ProseWrap } from "projen/lib/javascript";
+import { NpmAccess, ProseWrap, UpgradeDependenciesSchedule } from "projen/lib/javascript";
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Ben Limmer",
@@ -17,6 +17,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   githubOptions: {
     projenCredentials: GithubCredentials.fromApp(),
   },
+
   autoApproveUpgrades: true,
   autoApproveOptions: {
     allowedUsernames: ["projen-automation-app[bot]"],
@@ -36,6 +37,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   // deps: [],
   devDeps: ["@mrgrain/jsii-struct-builder"],
+  depsUpgradeOptions: {
+    workflowOptions: {
+      schedule: UpgradeDependenciesSchedule.MONTHLY,
+    },
+  },
+
   eslintOptions: {
     dirs: ["src"],
     ignorePatterns: ["src/generated/*.ts"], // ignore generated files

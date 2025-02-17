@@ -1,18 +1,26 @@
 # `@blimmer/cdk-github-oidc`
 
-This repository contains constructs to communicate between GitHub Actions and AWS via an Open ID Connect (OIDC)
-provider. The process is described in
-[this GitHub Actions documentation](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect).
+A CDK construct library that enables secure authentication between GitHub Actions and AWS using OpenID Connect (OIDC).
+This eliminates the need for long-lived AWS credentials in your GitHub repositories.
+
+## What is OIDC?
+
+OIDC (OpenID Connect) allows GitHub Actions to authenticate directly with AWS using short-lived tokens instead of
+storing AWS credentials. The process is described in
+[GitHub's documentation](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect).
 
 ## Security Benefits
 
-By using the OpenID Connect provider, you can communicate with AWS from GitHub Actions without saving static credentials
-(e.g., `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`) in your GitHub Actions secret variables. Removing static
-credentials is a best practice for security.
+Using OIDC for GitHub Actions authentication:
 
-## Quick Start
+- Eliminates the need to store AWS credentials as GitHub secrets
+- Provides short-lived, automatically rotated credentials
+- Enables fine-grained access control based on repository, branch, environment, or other conditions
+- Follows security best practices for cloud access
 
-### Installation
+## Installation
+
+### Node.js
 
 ```shell
 npm install --save @blimmer/cdk-github-oidc
@@ -24,10 +32,19 @@ or
 yarn add @blimmer/cdk-github-oidc
 ```
 
+### Python
+
+```bash
+pip install cdk-github-oidc
+```
+
+For Python, see [below](#python).
+
 ### Create or Import a Provider
 
-Each AWS account must be bootstrapped with an OIDC provider. Use the `GithubActionsIdentityProvider` construct to create
-a new provider.
+Each AWS account must be bootstrapped with a single OIDC provider.
+
+To create it in your stack, use the `GithubActionsIdentityProvider` construct.
 
 ```ts
 import { GithubActionsIdentityProvider } from "@blimmer/cdk-github-oidc";
@@ -41,7 +58,7 @@ export class MyStack extends Stack {
 }
 ```
 
-If you want to use an existing provider, you can import it using the `GithubActionsIdentityProvider.fromAccount()`
+Or, if another stack created the provider, you can import it using the `GithubActionsIdentityProvider.fromAccount()`
 method.
 
 ```ts
@@ -58,7 +75,8 @@ export class MyStack extends Stack {
 
 ### Create a Role
 
-Once you have a handle to a provider, you can create a role assumed by GitHub Actions.
+Once you have a handle to a provider, you can create a role assumed by GitHub Actions. You grant this role permission to
+access the resources/APIs you need (more on that [below](#granting-permissions-to-the-role)).
 
 ```ts
 import { GithubActionsRole, GithubActionsIdentityProvider, BranchFilter } from "@blimmer/cdk-github-oidc";
@@ -81,8 +99,8 @@ export class MyStack extends Stack {
 
 ### Subject Filters
 
-As you can see in the example above, you must pass one or more `SubjectFilter`s to the `GithubActionsRole` construct.
-These filters are used to determine which GitHub Actions workflows can assume the role.
+You must pass one or more `SubjectFilter`s to the `GithubActionsRole` construct. These filters are used to determine
+which GitHub Actions workflows can assume the role.
 
 This construct exposes first class support for the following filters:
 
@@ -90,53 +108,91 @@ This construct exposes first class support for the following filters:
 
   ```ts
   // Allow all branches, tags, environments, pull requests, etc.
-  new AllowAllFilter({ owner: "blimmer", repository: "cdk-github-oidc" });
+  new AllowAllFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+  });
   ```
 
 - [`BranchFilter`](/API.md#branchfilter)
 
   ```ts
   // Allow all branches
-  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" });
+  new BranchFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    branch: "*",
+  });
 
   // Specify a branch
-  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "main" });
+  new BranchFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    branch: "main",
+  });
 
   // Specify a branch pattern
-  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "feature/*" });
+  new BranchFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    branch: "feature/*",
+  });
   ```
 
 - [`TagFilter`](/API.md#tagfilter)
 
   ```ts
   // Allow all tags
-  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "*" });
+  new TagFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    tag: "*",
+  });
 
   // Specify a tag
-  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "v1.0.0" });
+  new TagFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    tag: "v1.0.0",
+  });
 
   // Specify a tag pattern
-  new TagFilter({ owner: "blimmer", repository: "cdk-github-oidc", tag: "v1.*" });
+  new TagFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    tag: "v1.*",
+  });
   ```
 
 - [`EnvironmentFilter`](/API.md#environmentfilter)
 
   ```ts
   // Allow all environments
-  new EnvironmentFilter({ owner: "blimmer", repository: "cdk-github-oidc", environment: "*" });
+  new EnvironmentFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    environment: "*",
+  });
 
   // Specify an environment
-  new EnvironmentFilter({ owner: "blimmer", repository: "cdk-github-oidc", environment: "staging" });
+  new EnvironmentFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+    environment: "staging",
+  });
   ```
 
 - [`PullRequestFilter`](/API.md#pullrequestfilter)
 
   ```ts
   // Allow all pull requests
-  new PullRequestFilter({ owner: "blimmer", repository: "cdk-github-oidc" });
+  new PullRequestFilter({
+    owner: "blimmer",
+    repository: "cdk-github-oidc",
+  });
   ```
 
-If none of these filters fit your use case, you can implement your via the
+If none of these filters fit your use case, you can implement your own via the
 [`IGithubActionOidcFilter`](/API.md#igithubactionoidcfilter) interface, or use the
 [`CustomFilter`](/API.md#customfilter) construct.
 
@@ -146,7 +202,8 @@ You can learn more about subject filters in the
 ### Granting Permissions to the Role
 
 The `GithubActionsRole` construct _is a_ `Role` construct, so you can use all of the same properties and methods as you
-would with a normal CDK IAM `Role` construct.
+would with a normal
+[CDK IAM `Role` construct](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_iam.Role.html).
 
 ```ts
 import { GithubActionsRole, GithubActionsIdentityProvider, BranchFilter } from "@blimmer/cdk-github-oidc";
@@ -164,7 +221,13 @@ export class MyStack extends Stack {
       provider,
       roleName: "my-github-actions-role",
       description: "Role assumed by GitHub Actions",
-      subjectFilters: [new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" })],
+      subjectFilters: [
+        new BranchFilter({
+          owner: "blimmer",
+          repository: "cdk-github-oidc",
+          branch: "*",
+        }),
+      ],
     });
 
     // Grant access via CDK `grant*` methods
@@ -172,7 +235,12 @@ export class MyStack extends Stack {
     role.grantReadWrite(bucket);
 
     // Add a custom policy
-    role.addToPolicy(new PolicyStatement({ actions: ["s3:PutObject"], resources: ["arn:aws:s3:::my-bucket/*"] }));
+    role.addToPolicy(
+      new PolicyStatement({
+        actions: ["s3:PutObject"],
+        resources: ["arn:aws:s3:::my-bucket/*"],
+      }),
+    );
   }
 }
 ```
@@ -203,18 +271,28 @@ more details.
 
 For detailed API docs, see [API.md](/API.md).
 
-## Python
+## Troubleshooting
 
-This package is available for Python as `cdk-github-oidc`.
+### Common Issues
 
-```bash
-pip install cdk-github-oidc
+1. **Role assumption fails**: Ensure your GitHub Action has the required permissions:
+
+```yaml
+permissions:
+  id-token: write # Required for OIDC
+  contents: read # Required for checking out code
 ```
+
+1. **Provider already exists**: Only one OIDC provider can exist per AWS account. Use
+   `GithubActionsIdentityProvider.fromAccount()` if one already exists.
+
+1. **Subject filter not matching**: Double check your subject filter configuration matches your GitHub workflow context.
+   Use logging to debug the actual subject string being provided.
 
 ## Migrating from `aws-cdk-github-oidc`
 
-This package was inspired by [`aws-cdk-github-oidc`](https://github.com/aripalo/aws-cdk-github-oidc), but this package
-became somewhat unmaintained.
+This package was inspired by [`aws-cdk-github-oidc`](https://github.com/aripalo/aws-cdk-github-oidc), but that package
+became unmaintained.
 
 For a role that looked like this in `aws-cdk-github-oidc`:
 
@@ -256,8 +334,8 @@ By default, CloudFormation will create resources before destroying the old ones.
 between `aws-cdk-github-oidc` and `@blimmer/cdk-github-oidc` because the `GithubActionsIdentityProvider` is a singleton.
 It might also affect your roles, if you specified a `roleName`.
 
-To work around this issue, delete the old provider and role(s) before migrating to use this package. This will cause
-downtime while you delete/re-create the resources.
+To work around this issue, delete the old provider and role(s) before migrating to use this package. Note that this will
+make the role unavailable for a few minutes while things are recreated
 
 ## Resources
 

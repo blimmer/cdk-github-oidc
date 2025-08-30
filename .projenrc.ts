@@ -26,7 +26,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   projenrcTs: true,
 
-  jsiiVersion: "~5.7.0",
+  jsiiVersion: "~5.8.0",
 
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
   npmAccess: NpmAccess.PUBLIC,

@@ -30,9 +30,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
   npmAccess: NpmAccess.PUBLIC,
+  npmTrustedPublishing: true,
   python: {
     distName: "cdk-github-oidc",
     module: "cdk_github_oidc",
+    trustedPublishing: true,
   },
 
   // deps: [],

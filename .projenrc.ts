@@ -26,13 +26,15 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   projenrcTs: true,
 
-  jsiiVersion: "~5.7.0",
+  jsiiVersion: "~5.8.0",
 
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
   npmAccess: NpmAccess.PUBLIC,
+  npmTrustedPublishing: true,
   python: {
     distName: "cdk-github-oidc",
     module: "cdk_github_oidc",
+    trustedPublishing: true,
   },
 
   // deps: [],

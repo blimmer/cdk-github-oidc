@@ -66,7 +66,7 @@ project.github?.tryFindWorkflow("release")?.file?.patch(
   JsonPatch.add("/jobs/release_npm/steps/1", {
     name: "Update npm",
     run: "npm i -g npm@11.5.2",
-  })
+  }),
 );
 
 new ProjenStruct(project, { name: "RoleProps", filePath: "src/generated/IamRoleProps.ts" }).mixin(

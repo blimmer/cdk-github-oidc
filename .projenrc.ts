@@ -1,5 +1,5 @@
 import { ProjenStruct, Struct } from "@mrgrain/jsii-struct-builder";
-import { awscdk, ReleasableCommits } from "projen";
+import { awscdk, JsonPatch, ReleasableCommits } from "projen";
 import { GithubCredentials } from "projen/lib/github";
 import { NpmAccess, ProseWrap, UpgradeDependenciesSchedule } from "projen/lib/javascript";
 
@@ -28,6 +28,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
 
   jsiiVersion: "~5.8.0",
 
+  // Release
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
   npmAccess: NpmAccess.PUBLIC,
   npmTrustedPublishing: true,
@@ -58,6 +59,15 @@ const project = new awscdk.AwsCdkConstructLibrary({
     },
   },
 });
+
+// Update npm for Trusted Publishing
+// Hopefully this can be removed in the future: https://github.com/projen/projen/issues/4341#issuecomment-3239378346
+project.github?.tryFindWorkflow("release")?.file?.patch(
+  JsonPatch.add("/jobs/release_npm/steps/1", {
+    name: "Update npm",
+    run: "npm i -g npm@11.5.2",
+  })
+);
 
 new ProjenStruct(project, { name: "RoleProps", filePath: "src/generated/IamRoleProps.ts" }).mixin(
   Struct.fromFqn("aws-cdk-lib.aws_iam.RoleProps").omit("assumedBy").withoutDeprecated(),

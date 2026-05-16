@@ -26,8 +26,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: lts/*
-          package-manager-cache: false
+          node-version: "24"
+          cache: pnpm
+          package-manager-cache: true
       - name: Install dependencies
         run: pnpm i --no-frozen-lockfile
       - name: build
@@ -107,7 +108,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v6
         with:
-          node-version: lts/*
+          node-version: "24"
           package-manager-cache: false
       - name: Download build artifacts
         uses: actions/download-artifact@v8
@@ -146,7 +147,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v6
         with:
-          node-version: lts/*
+          node-version: "24"
           package-manager-cache: false
       - uses: actions/setup-python@v6
         with:

@@ -15,6 +15,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   majorVersion: 1,
 
   packageManager: NodePackageManager.PNPM,
+  workflowNodeVersion: "24",
+  workflowPackageCache: true,
 
   githubOptions: {
     projenCredentials: GithubCredentials.fromApp(),
@@ -44,6 +46,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     workflowOptions: {
       schedule: UpgradeDependenciesSchedule.MONTHLY,
     },
+    cooldown: 5,
   },
 
   eslintOptions: {

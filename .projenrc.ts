@@ -1,7 +1,7 @@
 import { ProjenStruct, Struct } from "@mrgrain/jsii-struct-builder";
 import { awscdk, JsonPatch, ReleasableCommits } from "projen";
 import { GithubCredentials } from "projen/lib/github";
-import { NodePackageManager, NpmAccess, ProseWrap, UpgradeDependenciesSchedule } from "projen/lib/javascript";
+import { NpmAccess, ProseWrap, UpgradeDependenciesSchedule } from "projen/lib/javascript";
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: "Ben Limmer",
@@ -14,10 +14,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   keywords: ["cdk", "aws-cdk", "awscdk", "aws", "iam", "github", "github-actions", "oidc", "openid-connect"],
   majorVersion: 1,
 
-  packageManager: NodePackageManager.PNPM,
-  workflowNodeVersion: "24",
-  workflowPackageCache: true,
-
   githubOptions: {
     projenCredentials: GithubCredentials.fromApp(),
   },
@@ -29,6 +25,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   },
 
   projenrcTs: true,
+
+  jsiiVersion: "~5.8.0",
 
   // Release
   releasableCommits: ReleasableCommits.featuresAndFixes(), // don't release "chore" commits
@@ -46,7 +44,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
     workflowOptions: {
       schedule: UpgradeDependenciesSchedule.MONTHLY,
     },
-    cooldown: 5,
   },
 
   eslintOptions: {

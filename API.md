@@ -54,7 +54,6 @@ new GithubActionsIdentityProvider(scope: Construct, id: string, props?: GithubAc
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.overrideLogicalId">overrideLogicalId</a></code> | Overrides the auto-generated logical ID with a specific ID. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.addDeletionOverride">addDeletionOverride</a></code> | Syntactic sugar for `addOverride(path, undefined)`. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.addDependency">addDependency</a></code> | Indicates that this resource depends on another resource and cannot be provisioned unless the other resource has been successfully provisioned. |
@@ -81,27 +80,6 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
-
-##### `with` <a name="with" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.with"></a>
-
-```typescript
-public with(mixins: ...IMixin[]): IConstruct
-```
-
-Applies one or more mixins to this construct.
-
-Mixins are applied in order. The list of constructs is captured at the
-start of the call, so constructs added by a mixin will not be visited.
-Use multiple `with()` calls if subsequent mixins should apply to added
-constructs.
-
-###### `mixins`<sup>Required</sup> <a name="mixins" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.with.parameter.mixins"></a>
-
-- *Type:* ...constructs.IMixin[]
-
-The mixins to apply.
-
----
 
 ##### `overrideLogicalId` <a name="overrideLogicalId" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.overrideLogicalId"></a>
 
@@ -394,7 +372,7 @@ node metadata ends up in the Cloud Assembly.)
 ##### `obtainDependencies` <a name="obtainDependencies" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.obtainDependencies"></a>
 
 ```typescript
-public obtainDependencies(): (Stack | CfnResource)[]
+public obtainDependencies(): Stack | CfnResource[]
 ```
 
 Retrieves an array of resources this resource depends on.
@@ -478,7 +456,7 @@ tree inspector to collect and process attributes.
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.isConstruct"></a>
+##### ~~`isConstruct`~~ <a name="isConstruct" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.isConstruct"></a>
 
 ```typescript
 import { GithubActionsIdentityProvider } from '@blimmer/cdk-github-oidc'
@@ -487,20 +465,6 @@ GithubActionsIdentityProvider.isConstruct(x: any)
 ```
 
 Checks if `x` is a construct.
-
-Use this method instead of `instanceof` to properly detect `Construct`
-instances, even when the construct library is symlinked.
-
-Explanation: in JavaScript, multiple copies of the `constructs` library on
-disk are seen as independent, completely different libraries. As a
-consequence, the class `Construct` in each copy of the `constructs` library
-is seen as a different class, and an instance of one class will not test as
-`instanceof` the other class. `npm install` will not create installations
-like this, but users may manually symlink construct libraries together or
-use a monorepo tool: in those cases, multiple copies of the `constructs`
-library can be accidentally installed, and `instanceof` will behave
-unpredictably. It is safest to avoid using `instanceof`, and using
-this type-testing method instead.
 
 ###### `x`<sup>Required</sup> <a name="x" id="@blimmer/cdk-github-oidc.GithubActionsIdentityProvider.isConstruct.parameter.x"></a>
 
@@ -845,7 +809,6 @@ new GithubActionsRole(scope: Construct, id: string, props: GithubActionsRoleProp
 | **Name** | **Description** |
 | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsRole.toString">toString</a></code> | Returns a string representation of this construct. |
-| <code><a href="#@blimmer/cdk-github-oidc.GithubActionsRole.with">with</a></code> | Applies one or more mixins to this construct. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsRole.applyRemovalPolicy">applyRemovalPolicy</a></code> | Apply the given removal policy to this resource. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsRole.addManagedPolicy">addManagedPolicy</a></code> | Attaches a managed policy to this role. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionsRole.addToPolicy">addToPolicy</a></code> | Add to the policy of this principal. |
@@ -865,27 +828,6 @@ public toString(): string
 ```
 
 Returns a string representation of this construct.
-
-##### `with` <a name="with" id="@blimmer/cdk-github-oidc.GithubActionsRole.with"></a>
-
-```typescript
-public with(mixins: ...IMixin[]): IConstruct
-```
-
-Applies one or more mixins to this construct.
-
-Mixins are applied in order. The list of constructs is captured at the
-start of the call, so constructs added by a mixin will not be visited.
-Use multiple `with()` calls if subsequent mixins should apply to added
-constructs.
-
-###### `mixins`<sup>Required</sup> <a name="mixins" id="@blimmer/cdk-github-oidc.GithubActionsRole.with.parameter.mixins"></a>
-
-- *Type:* ...constructs.IMixin[]
-
-The mixins to apply.
-
----
 
 ##### `applyRemovalPolicy` <a name="applyRemovalPolicy" id="@blimmer/cdk-github-oidc.GithubActionsRole.applyRemovalPolicy"></a>
 
@@ -1055,7 +997,7 @@ Role's policies yourself.
 
 ---
 
-##### `isConstruct` <a name="isConstruct" id="@blimmer/cdk-github-oidc.GithubActionsRole.isConstruct"></a>
+##### ~~`isConstruct`~~ <a name="isConstruct" id="@blimmer/cdk-github-oidc.GithubActionsRole.isConstruct"></a>
 
 ```typescript
 import { GithubActionsRole } from '@blimmer/cdk-github-oidc'
@@ -1064,20 +1006,6 @@ GithubActionsRole.isConstruct(x: any)
 ```
 
 Checks if `x` is a construct.
-
-Use this method instead of `instanceof` to properly detect `Construct`
-instances, even when the construct library is symlinked.
-
-Explanation: in JavaScript, multiple copies of the `constructs` library on
-disk are seen as independent, completely different libraries. As a
-consequence, the class `Construct` in each copy of the `constructs` library
-is seen as a different class, and an instance of one class will not test as
-`instanceof` the other class. `npm install` will not create installations
-like this, but users may manually symlink construct libraries together or
-use a monorepo tool: in those cases, multiple copies of the `constructs`
-library can be accidentally installed, and `instanceof` will behave
-unpredictably. It is safest to avoid using `instanceof`, and using
-this type-testing method instead.
 
 ###### `x`<sup>Required</sup> <a name="x" id="@blimmer/cdk-github-oidc.GithubActionsRole.isConstruct.parameter.x"></a>
 

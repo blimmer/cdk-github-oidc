@@ -1,4 +1,8 @@
 {
+  "manifestVersion": 3,
+  "env": {
+    "PATH": "$(pnpm -c exec \"node --print process.env.PATH\")"
+  },
   "tasks": {
     "build": {
       "name": "build",
@@ -33,15 +37,36 @@
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
         "RELEASE_TAG_PREFIX": "",
-        "BUMP_PACKAGE": "commit-and-tag-version@^12",
-        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep \"^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+\""
+        "BUMP_PACKAGE": "commit-and-tag-version@^12"
       },
       "steps": [
         {
-          "builtin": "release/bump-version"
+          "builtin": "release/resolve-latest-tag",
+          "outputEnv": "LATEST_TAG"
+        },
+        {
+          "spawn": "bump:releasable-commits",
+          "outputEnv": "RELEASABLE_COMMITS",
+          "condition": "git rev-parse --verify --quiet \"refs/tags/$LATEST_TAG\""
+        },
+        {
+          "builtin": "release/suggest-version-bump",
+          "outputEnv": "SUGGESTED_BUMP"
+        },
+        {
+          "builtin": "release/apply-version-bump"
         }
       ],
-      "condition": "git log --oneline -1 | grep -qv \"chore(release):\""
+      "condition": "git log --oneline -1 | grep -v \"chore(release):\" > /dev/null"
+    },
+    "bump:releasable-commits": {
+      "name": "bump:releasable-commits",
+      "description": "Print the releasable commits since the latest release",
+      "steps": [
+        {
+          "exec": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
+        }
+      ]
     },
     "clobber": {
       "name": "clobber",
@@ -98,7 +123,12 @@
       "description": "Synthesize project files",
       "steps": [
         {
-          "exec": "ts-node --project tsconfig.dev.json .projenrc.ts"
+          "execArgs": [
+            "ts-node",
+            "--project",
+            "projenrc/tsconfig.json",
+            ".projenrc.ts"
+          ]
         }
       ]
     },
@@ -107,7 +137,11 @@
       "description": "Generate API.md from .jsii manifest",
       "steps": [
         {
-          "exec": "jsii-docgen -o API.md"
+          "execArgs": [
+            "jsii-docgen",
+            "-o",
+            "API.md"
+          ]
         }
       ]
     },
@@ -186,7 +220,14 @@
       "description": "Create js language bindings",
       "steps": [
         {
-          "exec": "jsii-pacmak -v --pack-command \"pnpm pack\" --target js"
+          "execArgs": [
+            "jsii-pacmak",
+            "-v",
+            "--pack-command",
+            "pnpm pack",
+            "--target",
+            "js"
+          ]
         }
       ]
     },
@@ -195,7 +236,14 @@
       "description": "Create python language bindings",
       "steps": [
         {
-          "exec": "jsii-pacmak -v --pack-command \"pnpm pack\" --target python"
+          "execArgs": [
+            "jsii-pacmak",
+            "-v",
+            "--pack-command",
+            "pnpm pack",
+            "--target",
+            "python"
+          ]
         }
       ]
     },
@@ -272,8 +320,7 @@
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
         "RELEASE_TAG_PREFIX": "",
-        "BUMP_PACKAGE": "commit-and-tag-version@^12",
-        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep \"^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+\""
+        "BUMP_PACKAGE": "commit-and-tag-version@^12"
       },
       "steps": [
         {
@@ -289,13 +336,53 @@
       },
       "steps": [
         {
-          "exec": "pnpm dlx npm-check-updates@20 --upgrade --target=minor --cooldown=5 --peer --no-deprecated --dep=dev,peer,prod,optional --filter=@mrgrain/jsii-struct-builder,@types/jest,@types/node,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,jest,jsii-diff,jsii-pacmak,prettier,projen,ts-jest,ts-node,typescript"
+          "execArgs": [
+            "pnpm",
+            "dlx",
+            "npm-check-updates@20",
+            "--upgrade",
+            "--target=minor",
+            "--cooldown=5",
+            "--peer",
+            "--no-deprecated",
+            "--dep=dev,prod,peer,optional",
+            "--filter=@mrgrain/jsii-struct-builder,@types/jest,@types/node,eslint-config-prettier,eslint-import-resolver-typescript,eslint-plugin-import,eslint-plugin-prettier,jest,jsii-diff,jsii-pacmak,prettier,projen,ts-jest,ts-node,typescript"
+          ]
         },
         {
           "exec": "pnpm i --no-frozen-lockfile"
         },
         {
-          "exec": "pnpm update @mrgrain/jsii-struct-builder @types/jest @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser commit-and-tag-version eslint-config-prettier eslint-import-resolver-typescript eslint-plugin-import eslint-plugin-prettier eslint jest jest-junit jsii-diff jsii-docgen jsii-pacmak jsii-rosetta jsii prettier projen ts-jest ts-node typescript aws-cdk-lib constructs --config.minimum-release-age=7200"
+          "execArgs": [
+            "pnpm",
+            "update",
+            "@mrgrain/jsii-struct-builder",
+            "@types/jest",
+            "@types/node",
+            "@typescript-eslint/eslint-plugin",
+            "@typescript-eslint/parser",
+            "commit-and-tag-version",
+            "eslint-config-prettier",
+            "eslint-import-resolver-typescript",
+            "eslint-plugin-import",
+            "eslint-plugin-prettier",
+            "eslint",
+            "jest",
+            "jest-junit",
+            "jsii-diff",
+            "jsii-docgen",
+            "jsii-pacmak",
+            "jsii-rosetta",
+            "jsii",
+            "prettier",
+            "projen",
+            "ts-jest",
+            "ts-node",
+            "typescript",
+            "aws-cdk-lib",
+            "constructs",
+            "--config.minimum-release-age=7200"
+          ]
         },
         {
           "exec": "pnpm exec projen"
@@ -314,9 +401,6 @@
         }
       ]
     }
-  },
-  "env": {
-    "PATH": "$(pnpm -c exec \"node --print process.env.PATH\")"
   },
   "//": "~~ Generated by projen. To modify, edit .projenrc.ts and run \"pnpm exec projen\"."
 }

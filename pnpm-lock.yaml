@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@mrgrain/jsii-struct-builder':
         specifier: ^0.7.64
-        version: 0.7.64(projen@0.99.60(constructs@10.5.1))
+        version: 0.7.64(projen@0.101.20(constructs@10.5.1))
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -72,8 +72,8 @@ importers:
         specifier: ^3.8.3
         version: 3.8.3
       projen:
-        specifier: ^0.99.60
-        version: 0.99.60(constructs@10.5.1)
+        specifier: ^0.101.20
+        version: 0.101.20(constructs@10.5.1)
       ts-jest:
         specifier: ^29.4.9
         version: 29.4.9(@babel/core@7.29.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.29.0))(jest-util@29.7.0)(jest@29.7.0(@types/node@22.19.18)(ts-node@10.9.2(@types/node@22.19.18)(typescript@5.9.3)))(typescript@5.9.3)
@@ -2409,24 +2409,24 @@ packages:
   process-nextick-args@2.0.1:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
 
-  projen@0.99.60:
-    resolution: {integrity: sha512-LhMS5frqNRdOuqzq8pLEICMZJm07IsAW0gCwBUQQSs1FHr2YjLv9apq8x7ZwKYuLJ1Y7iaTDE2LdJLB6HQQF4g==}
+  projen@0.101.20:
+    resolution: {integrity: sha512-rQ0gy/4yGGcr50txthFg9F4LhL9eBORo0UG3n1Yg5GJ6Z7Kt4ju9F5TKjlXY799vZQaEEh7OqZiHegoqEVWycw==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     peerDependencies:
-      constructs: ^10.0.0
+      constructs: ^10.5.0
     bundledDependencies:
       - '@iarna/toml'
       - case
       - chalk
       - comment-json
       - conventional-changelog-config-spec
+      - dax
       - fast-glob
       - fast-json-patch
       - ini
       - parse-conflict-json
       - semver
-      - shx
       - xmlbuilder2
       - yaml
       - yargs
@@ -3506,10 +3506,10 @@ snapshots:
 
   '@jsii/spec@1.129.0': {}
 
-  '@mrgrain/jsii-struct-builder@0.7.64(projen@0.99.60(constructs@10.5.1))':
+  '@mrgrain/jsii-struct-builder@0.7.64(projen@0.101.20(constructs@10.5.1))':
     dependencies:
       '@jsii/spec': 1.129.0
-      projen: 0.99.60(constructs@10.5.1)
+      projen: 0.101.20(constructs@10.5.1)
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -5822,7 +5822,7 @@ snapshots:
 
   process-nextick-args@2.0.1: {}
 
-  projen@0.99.60(constructs@10.5.1):
+  projen@0.101.20(constructs@10.5.1):
     dependencies:
       constructs: 10.5.1
 

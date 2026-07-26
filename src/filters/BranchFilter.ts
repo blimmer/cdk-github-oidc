@@ -25,6 +25,6 @@ export class BranchFilter extends IGithubActionOidcFilter {
   }
 
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:ref:refs/heads/${this.branch}`;
+    return `${this.repositoryClaim}:ref:refs/heads/${this.branch}`;
   }
 }

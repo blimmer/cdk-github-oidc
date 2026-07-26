@@ -7,6 +7,6 @@ import { IGithubActionOidcFilter } from "./IGithubActionOidcFilter";
  */
 export class PullRequestFilter extends IGithubActionOidcFilter {
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:pull_request`;
+    return `${this.repositoryClaim}:pull_request`;
   }
 }

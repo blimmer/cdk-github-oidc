@@ -5,6 +5,6 @@ import { IGithubActionOidcFilter } from "./IGithubActionOidcFilter";
  */
 export class AllowAllFilter extends IGithubActionOidcFilter {
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:*`;
+    return `${this.repositoryClaim}:*`;
   }
 }

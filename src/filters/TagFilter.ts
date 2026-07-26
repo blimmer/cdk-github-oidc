@@ -25,6 +25,6 @@ export class TagFilter extends IGithubActionOidcFilter {
   }
 
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:ref:refs/tags/${this.tag}`;
+    return `${this.repositoryClaim}:ref:refs/tags/${this.tag}`;
   }
 }

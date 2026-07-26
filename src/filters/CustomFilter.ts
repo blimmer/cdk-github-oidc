@@ -25,6 +25,6 @@ export class CustomFilter extends IGithubActionOidcFilter {
   }
 
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:${this.filter}`;
+    return `${this.repositoryClaim}:${this.filter}`;
   }
 }

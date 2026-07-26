@@ -21,6 +21,6 @@ export class EnvironmentFilter extends IGithubActionOidcFilter {
   }
 
   public toSubject(): string {
-    return `repo:${this.owner}/${this.repository}:environment:${this.environment}`;
+    return `${this.repositoryClaim}:environment:${this.environment}`;
   }
 }

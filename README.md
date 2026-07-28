@@ -9,14 +9,15 @@ OIDC (OpenID Connect) allows GitHub Actions to authenticate directly with AWS us
 storing AWS credentials. The process is described in
 [GitHub's documentation](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect).
 
-## Security Benefits
-
-Using OIDC for GitHub Actions authentication:
+<details>
+<summary>Why use OIDC instead of access keys?</summary>
 
 - Eliminates the need to store AWS credentials as GitHub secrets
 - Provides short-lived, automatically rotated credentials
 - Enables fine-grained access control based on repository, branch, environment, or other conditions
 - Follows security best practices for cloud access
+
+</details>
 
 ## Installation
 
@@ -38,7 +39,9 @@ yarn add @blimmer/cdk-github-oidc
 pip install cdk-github-oidc
 ```
 
-For Python, see [below](#python).
+## Usage
+
+The examples below are TypeScript. For the full API in every supported language, see [API.md](/API.md).
 
 ### Create or Import a Provider
 
@@ -91,18 +94,30 @@ export class MyStack extends Stack {
       provider,
       roleName: "my-github-actions-role",
       description: "Role assumed by GitHub Actions",
-      subjectFilters: [new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "*" })],
+      subjectFilters: [
+        new BranchFilter({
+          owner: "blimmer",
+          ownerId: "630449",
+          repository: "cdk-github-oidc",
+          repositoryId: "919628491",
+          branch: "*",
+        }),
+      ],
     });
   }
 }
 ```
+
+`ownerId` and `repositoryId` opt into GitHub's [immutable subject claims](#immutable-subject-claims), the default for
+repositories created after July 15, 2026. Omit both if your repository predates that.
 
 ### Subject Filters
 
 You must pass one or more `SubjectFilter`s to the `GithubActionsRole` construct. These filters are used to determine
 which GitHub Actions workflows can assume the role.
 
-This construct exposes first class support for the following filters:
+This construct exposes first class support for the following filters. The examples omit `ownerId` and `repositoryId` to
+keep the focus on what each filter does; add them as shown above if your repository uses immutable subject claims.
 
 - [`AllowAllFilter`](/API.md#allowallfilter)
 
@@ -196,8 +211,126 @@ If none of these filters fit your use case, you can implement your own via the
 [`IGithubActionOidcFilter`](/API.md#igithubactionoidcfilter) interface, or use the
 [`CustomFilter`](/API.md#customfilter) construct.
 
+When writing your own, build the subject from the protected `repositoryClaim` getter rather than from `owner` and
+`repository` directly. It renders whichever `repo:` prefix the filter was configured for, so your filter keeps working
+if the repository moves to [immutable subject claims](#immutable-subject-claims).
+
+```ts
+class DeploymentFilter extends IGithubActionOidcFilter {
+  public toSubject(): string {
+    return `${this.repositoryClaim}:deployment`;
+  }
+}
+```
+
 You can learn more about subject filters in the
 [Github docs](https://docs.github.com/en/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect#configuring-the-subject-in-your-cloud-provider)
+
+### Immutable Subject Claims
+
+GitHub is moving to an
+[immutable subject claim format](https://docs.github.com/en/actions/reference/security/oidc#immutable-subject-claims)
+that embeds numeric owner and repository IDs:
+
+```
+repo:blimmer/cdk-github-oidc:ref:refs/heads/main                   # previous
+repo:blimmer@630449/cdk-github-oidc@919628491:ref:refs/heads/main  # immutable
+```
+
+Repositories created after July 15, 2026 use the immutable format, as do repositories renamed or transferred after that
+date. Everything else keeps the previous format until you opt in, per repo or per org, in the OIDC settings UI or the
+[REST API](https://docs.github.com/en/rest/actions/oidc). A repository emits one format or the other, never both.
+
+Pass `ownerId` and `repositoryId` to any filter to get the immutable format:
+
+```ts
+new BranchFilter({
+  owner: "blimmer",
+  ownerId: "630449",
+  repository: "cdk-github-oidc",
+  repositoryId: "919628491",
+  branch: "main",
+});
+```
+
+Leave them off and you get the previous format, which is what the [subject filter](#subject-filters) examples above do.
+
+#### Finding the IDs
+
+```sh
+gh api repos/OWNER/REPO --jq '{ownerId: .owner.id, repositoryId: .id}'
+```
+
+To check which format a repository emits right now, read `sub_claim_prefix`:
+
+```sh
+gh api repos/OWNER/REPO/actions/oidc/customization/sub
+# {"use_default":true,"use_immutable_subject":false,"sub_claim_prefix":"repo:blimmer/cdk-github-oidc"}
+```
+
+The same setting lives at `https://github.com/OWNER/REPO/settings/actions/oidc-configuration`.
+
+#### Migration Prompt
+
+If you have more than a couple of filters, hand this to your coding agent.
+
+<details>
+<summary>Show the prompt</summary>
+
+```text
+Upgrade `@blimmer/cdk-github-oidc` to the latest version, then audit this CDK app for GitHub's immutable OIDC
+subject claim format.
+
+Background: GitHub embeds numeric owner and repository IDs in the OIDC `sub` claim
+(`repo:owner@123/repo@456:ref:refs/heads/main` instead of `repo:owner/repo:ref:refs/heads/main`). Repositories
+created, renamed, or transferred after July 15, 2026 use it automatically. Older repositories keep the previous
+format until someone opts in. A repository emits one format or the other, never both, so a trust policy built for
+the wrong format fails with `Not authorized to perform sts:AssumeRoleWithWebIdentity`.
+
+For every subject filter passed to a `GithubActionsRole` in this app:
+
+1. Run `gh api repos/<owner>/<repository>/actions/oidc/customization/sub` and read `use_immutable_subject`.
+2. If it is `false`, leave the filter alone. It is already correct.
+3. If it is `true`, run `gh api repos/<owner>/<repository> --jq '{ownerId: .owner.id, repositoryId: .id}'` and add
+   both values to that filter as `ownerId` and `repositoryId` (strings, not numbers). Keep `owner` and
+   `repository` as the plain names.
+
+Then find every class in this app that extends `IGithubActionOidcFilter`. If its `toSubject()` builds the subject
+from `this.owner` and `this.repository`, rewrite it to use the `this.repositoryClaim` getter instead, leaving the
+rest of the subject unchanged. Custom filters that skip this keep emitting the previous format no matter which IDs
+are passed to them.
+
+Report any repository the `gh` calls fail for rather than guessing its IDs, since a wrong ID produces a role nobody
+can assume. Do not add, remove, or re-scope any filter, and do not change anything beyond the filter arguments and
+the custom filter subject construction.
+```
+
+</details>
+
+#### Switching an Existing Repository
+
+Add a second filter carrying the IDs, deploy, opt in on GitHub, then delete the original filter. The role trusts both
+subjects in between, so nothing breaks mid-switch.
+
+```ts
+subjectFilters: [
+  new BranchFilter({ owner: "blimmer", repository: "cdk-github-oidc", branch: "main" }),
+  new BranchFilter({
+    owner: "blimmer",
+    ownerId: "630449",
+    repository: "cdk-github-oidc",
+    repositoryId: "919628491",
+    branch: "main",
+  }),
+];
+```
+
+Double-check the IDs. A wrong one produces a subject that never matches, and the only symptom is
+`Not authorized to perform sts:AssumeRoleWithWebIdentity`.
+
+Don't reach for a wildcard like `blimmer@*` to avoid looking them up. That trusts every account named `blimmer`,
+including whoever claims the name if the current owner renames or deletes it. Preventing exactly that is why the IDs
+exist.
 
 ### Granting Permissions to the Role
 
@@ -267,27 +400,28 @@ jobs:
 See [the `aws-actions/configure-aws-credentials` docs](https://github.com/aws-actions/configure-aws-credentials) for
 more details.
 
-## Usage
-
-For detailed API docs, see [API.md](/API.md).
-
 ## Troubleshooting
 
 ### Common Issues
 
 1. **Role assumption fails**: Ensure your GitHub Action has the required permissions:
 
-```yaml
-permissions:
-  id-token: write # Required for OIDC
-  contents: read # Required for checking out code
-```
+   ```yaml
+   permissions:
+     id-token: write # Required for OIDC
+     contents: read # Required for checking out code
+   ```
 
 1. **Provider already exists**: Only one OIDC provider can exist per AWS account. Use
    `GithubActionsIdentityProvider.fromAccount()` if one already exists.
 
 1. **Subject filter not matching**: Double check your subject filter configuration matches your GitHub workflow context.
    Use logging to debug the actual subject string being provided.
+
+1. **Role assumption breaks after a repo is created, renamed, or transferred**: the repository probably switched to
+   [immutable subject claims](#immutable-subject-claims). Run `gh api repos/OWNER/REPO/actions/oidc/customization/sub`
+   to see which format it emits, and pass `ownerId` and `repositoryId` to your filters if `use_immutable_subject` is
+   `true`. CloudTrail shows the subject that was actually presented.
 
 ## Migrating from `aws-cdk-github-oidc`
 

@@ -43,7 +43,7 @@ export class GithubActionsRole extends Role {
 
     if (subjectFilters.length === 0) {
       throw new Error(
-        "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc/README.md",
+        "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc#subject-filters",
       );
     }
 

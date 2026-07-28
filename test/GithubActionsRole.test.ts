@@ -73,7 +73,7 @@ describe("GithubActionsRole", () => {
     expect(() => {
       new GithubActionsRole(stack, "Role", { provider, subjectFilters: [] });
     }).toThrow(
-      "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc/README.md",
+      "You must provide at least one subject filter. Consider a BranchFilter allowing all (`*`) branches. See the docs for more information: https://github.com/blimmer/cdk-github-oidc#subject-filters",
     );
   });
 
@@ -132,6 +132,49 @@ describe("GithubActionsRole", () => {
                 "token.actions.githubusercontent.com:sub": [
                   "repo:my-org/my-repo:ref:refs/heads/main",
                   "repo:my-org/my-repo:ref:refs/heads/staging",
+                ],
+              },
+            },
+            Effect: "Allow",
+            Principal: {
+              Federated: "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com",
+            },
+          },
+        ],
+      },
+    });
+  });
+
+  it("handles a mix of previous-format and immutable-format filters", () => {
+    const app = new App();
+    const stack = new Stack(app, "Stack");
+    const provider = GithubActionsIdentityProvider.fromAccount(stack, { account: "123456789012", partition: "aws" });
+    new GithubActionsRole(stack, "Role", {
+      provider,
+      subjectFilters: [
+        new BranchFilter({ owner: "my-org", repository: "my-repo", branch: "main" }),
+        new BranchFilter({
+          owner: "my-org",
+          ownerId: "630449",
+          repository: "my-repo",
+          repositoryId: "919628491",
+          branch: "main",
+        }),
+      ],
+    });
+
+    const template = Template.fromStack(stack);
+    template.hasResourceProperties("AWS::IAM::Role", {
+      AssumeRolePolicyDocument: {
+        Statement: [
+          {
+            Action: "sts:AssumeRoleWithWebIdentity",
+            Condition: {
+              StringEquals: {
+                "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+                "token.actions.githubusercontent.com:sub": [
+                  "repo:my-org/my-repo:ref:refs/heads/main",
+                  "repo:my-org@630449/my-repo@919628491:ref:refs/heads/main",
                 ],
               },
             },

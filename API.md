@@ -1478,6 +1478,8 @@ const branchFilterProps: BranchFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.BranchFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.BranchFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
+| <code><a href="#@blimmer/cdk-github-oidc.BranchFilterProps.property.ownerId">ownerId</a></code> | <code>string</code> | The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format. |
+| <code><a href="#@blimmer/cdk-github-oidc.BranchFilterProps.property.repositoryId">repositoryId</a></code> | <code>string</code> | The numeric ID of the repository, used by GitHub's immutable subject claim format. |
 | <code><a href="#@blimmer/cdk-github-oidc.BranchFilterProps.property.branch">branch</a></code> | <code>string</code> | The name of the branch to filter on. You can also use wildcards. |
 
 ---
@@ -1503,6 +1505,37 @@ public readonly repository: string;
 - *Type:* string
 
 The name of the repository.
+
+---
+
+##### `ownerId`<sup>Optional</sup> <a name="ownerId" id="@blimmer/cdk-github-oidc.BranchFilterProps.property.ownerId"></a>
+
+```typescript
+public readonly ownerId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `repositoryId`. Find it via
+`gh api repos/OWNER/REPO --jq .owner.id`.
+
+---
+
+##### `repositoryId`<sup>Optional</sup> <a name="repositoryId" id="@blimmer/cdk-github-oidc.BranchFilterProps.property.repositoryId"></a>
+
+```typescript
+public readonly repositoryId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `ownerId`. Find it via `gh api repos/OWNER/REPO --jq .id`.
 
 ---
 
@@ -1536,6 +1569,8 @@ const customFilterProps: CustomFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
+| <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.ownerId">ownerId</a></code> | <code>string</code> | The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format. |
+| <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.repositoryId">repositoryId</a></code> | <code>string</code> | The numeric ID of the repository, used by GitHub's immutable subject claim format. |
 | <code><a href="#@blimmer/cdk-github-oidc.CustomFilterProps.property.filter">filter</a></code> | <code>string</code> | The filter to apply. The construct will automatically prefix the filter with `repo:${owner}/${repository}:`. |
 
 ---
@@ -1561,6 +1596,37 @@ public readonly repository: string;
 - *Type:* string
 
 The name of the repository.
+
+---
+
+##### `ownerId`<sup>Optional</sup> <a name="ownerId" id="@blimmer/cdk-github-oidc.CustomFilterProps.property.ownerId"></a>
+
+```typescript
+public readonly ownerId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `repositoryId`. Find it via
+`gh api repos/OWNER/REPO --jq .owner.id`.
+
+---
+
+##### `repositoryId`<sup>Optional</sup> <a name="repositoryId" id="@blimmer/cdk-github-oidc.CustomFilterProps.property.repositoryId"></a>
+
+```typescript
+public readonly repositoryId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `ownerId`. Find it via `gh api repos/OWNER/REPO --jq .id`.
 
 ---
 
@@ -1594,6 +1660,8 @@ const environmentFilterProps: EnvironmentFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
+| <code><a href="#@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.ownerId">ownerId</a></code> | <code>string</code> | The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format. |
+| <code><a href="#@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.repositoryId">repositoryId</a></code> | <code>string</code> | The numeric ID of the repository, used by GitHub's immutable subject claim format. |
 | <code><a href="#@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.environment">environment</a></code> | <code>string</code> | The name of the Github environment to allow assuming this role. |
 
 ---
@@ -1619,6 +1687,37 @@ public readonly repository: string;
 - *Type:* string
 
 The name of the repository.
+
+---
+
+##### `ownerId`<sup>Optional</sup> <a name="ownerId" id="@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.ownerId"></a>
+
+```typescript
+public readonly ownerId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `repositoryId`. Find it via
+`gh api repos/OWNER/REPO --jq .owner.id`.
+
+---
+
+##### `repositoryId`<sup>Optional</sup> <a name="repositoryId" id="@blimmer/cdk-github-oidc.EnvironmentFilterProps.property.repositoryId"></a>
+
+```typescript
+public readonly repositoryId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `ownerId`. Find it via `gh api repos/OWNER/REPO --jq .id`.
 
 ---
 
@@ -1650,6 +1749,8 @@ const githubActionOidcFilterProps: GithubActionOidcFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
+| <code><a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.ownerId">ownerId</a></code> | <code>string</code> | The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format. |
+| <code><a href="#@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.repositoryId">repositoryId</a></code> | <code>string</code> | The numeric ID of the repository, used by GitHub's immutable subject claim format. |
 
 ---
 
@@ -1674,6 +1775,37 @@ public readonly repository: string;
 - *Type:* string
 
 The name of the repository.
+
+---
+
+##### `ownerId`<sup>Optional</sup> <a name="ownerId" id="@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.ownerId"></a>
+
+```typescript
+public readonly ownerId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `repositoryId`. Find it via
+`gh api repos/OWNER/REPO --jq .owner.id`.
+
+---
+
+##### `repositoryId`<sup>Optional</sup> <a name="repositoryId" id="@blimmer/cdk-github-oidc.GithubActionOidcFilterProps.property.repositoryId"></a>
+
+```typescript
+public readonly repositoryId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `ownerId`. Find it via `gh api repos/OWNER/REPO --jq .id`.
 
 ---
 
@@ -2224,6 +2356,8 @@ const tagFilterProps: TagFilterProps = { ... }
 | --- | --- | --- |
 | <code><a href="#@blimmer/cdk-github-oidc.TagFilterProps.property.owner">owner</a></code> | <code>string</code> | The org or user that owns the repository. |
 | <code><a href="#@blimmer/cdk-github-oidc.TagFilterProps.property.repository">repository</a></code> | <code>string</code> | The name of the repository. |
+| <code><a href="#@blimmer/cdk-github-oidc.TagFilterProps.property.ownerId">ownerId</a></code> | <code>string</code> | The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format. |
+| <code><a href="#@blimmer/cdk-github-oidc.TagFilterProps.property.repositoryId">repositoryId</a></code> | <code>string</code> | The numeric ID of the repository, used by GitHub's immutable subject claim format. |
 | <code><a href="#@blimmer/cdk-github-oidc.TagFilterProps.property.tag">tag</a></code> | <code>string</code> | The name of the tag to filter on. You can also use wildcards. |
 
 ---
@@ -2249,6 +2383,37 @@ public readonly repository: string;
 - *Type:* string
 
 The name of the repository.
+
+---
+
+##### `ownerId`<sup>Optional</sup> <a name="ownerId" id="@blimmer/cdk-github-oidc.TagFilterProps.property.ownerId"></a>
+
+```typescript
+public readonly ownerId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the org or user that owns the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `repositoryId`. Find it via
+`gh api repos/OWNER/REPO --jq .owner.id`.
+
+---
+
+##### `repositoryId`<sup>Optional</sup> <a name="repositoryId" id="@blimmer/cdk-github-oidc.TagFilterProps.property.repositoryId"></a>
+
+```typescript
+public readonly repositoryId: string;
+```
+
+- *Type:* string
+- *Default:* the subject uses the previous (name-only) format
+
+The numeric ID of the repository, used by GitHub's immutable subject claim format.
+
+Must be provided together with `ownerId`. Find it via `gh api repos/OWNER/REPO --jq .id`.
 
 ---
 
